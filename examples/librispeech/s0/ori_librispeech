@@ -1,0 +1,2877 @@
+# Running on node18
+# Started at 2022年 06月 03日 星期五 12:45:26 CST
+# CUDA_VISIBLE_DEVICES="3,2,1,0" bash run.sh 
+dictionary: data/lang_char/train_960_unigram5000_units.txt
+run.sh: init method is file:///home/work_nfs4_ssd/azhang/workspace/wenet/wenet-main/examples/librispeech/s0/exp/sp_spec_aug/ddp_init
+2022-06-03 12:45:41,760 INFO training on multiple gpus, this gpu 3
+2022-06-03 12:45:41,761 INFO training on multiple gpus, this gpu 2
+2022-06-03 12:45:41,770 INFO training on multiple gpus, this gpu 1
+2022-06-03 12:45:41,770 INFO training on multiple gpus, this gpu 0
+2022-06-03 12:45:45,846 INFO Added key: store_based_barrier_key:1 to store for rank: 1
+2022-06-03 12:45:45,856 INFO Added key: store_based_barrier_key:1 to store for rank: 3
+2022-06-03 12:45:46,846 INFO Added key: store_based_barrier_key:1 to store for rank: 0
+2022-06-03 12:45:46,878 INFO Added key: store_based_barrier_key:1 to store for rank: 2
+2022-06-03 12:45:46,880 INFO Rank 2: Completed store-based barrier for key:store_based_barrier_key:1 with 4 nodes.
+2022-06-03 12:45:46,881 INFO Rank 1: Completed store-based barrier for key:store_based_barrier_key:1 with 4 nodes.
+2022-06-03 12:45:46,882 INFO Rank 0: Completed store-based barrier for key:store_based_barrier_key:1 with 4 nodes.
+2022-06-03 12:45:46,886 INFO Rank 3: Completed store-based barrier for key:store_based_barrier_key:1 with 4 nodes.
+2022-06-03 12:45:51,760 INFO Checkpoint: loading from checkpoint /home/work_nfs4_ssd/azhang/workspace/wenet/wenet-main/examples/librispeech/s0/exp/sp_spec_aug/76.pt for GPU
+2022-06-03 12:45:51,783 INFO Checkpoint: loading from checkpoint /home/work_nfs4_ssd/azhang/workspace/wenet/wenet-main/examples/librispeech/s0/exp/sp_spec_aug/76.pt for GPU
+2022-06-03 12:45:51,810 INFO Checkpoint: loading from checkpoint /home/work_nfs4_ssd/azhang/workspace/wenet/wenet-main/examples/librispeech/s0/exp/sp_spec_aug/76.pt for GPU
+2022-06-03 12:45:51,842 INFO Checkpoint: loading from checkpoint /home/work_nfs4_ssd/azhang/workspace/wenet/wenet-main/examples/librispeech/s0/exp/sp_spec_aug/76.pt for GPU
+2022-06-03 12:46:04,647 INFO Epoch 77 TRAIN info lr 1.6e-07
+2022-06-03 12:46:04,649 INFO using accumulate grad, new batch size is 1 times larger than before
+ASRModel(
+  (encoder): ConformerEncoder(
+    (global_cmvn): GlobalCMVN()
+    (embed): Conv2dSubsampling4(
+      (conv): Sequential(
+        (0): Conv2d(1, 256, kernel_size=(3, 3), stride=(2, 2))
+        (1): ReLU()
+        (2): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 2))
+        (3): ReLU()
+      )
+      (out): Sequential(
+        (0): Linear(in_features=4864, out_features=256, bias=True)
+      )
+      (pos_enc): RelPositionalEncoding(
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (after_norm): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+    (encoders): ModuleList(
+      (0): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (1): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (2): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (3): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (4): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (5): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (6): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (7): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (8): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (9): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (10): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (11): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+    )
+  )
+  (decoder): TransformerDecoder(
+    (embed): Sequential(
+      (0): Embedding(5002, 256)
+      (1): PositionalEncoding(
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (after_norm): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+    (output_layer): Linear(in_features=256, out_features=5002, bias=True)
+    (decoders): ModuleList(
+      (0): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (1): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (2): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (3): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (4): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (5): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+    )
+  )
+  (ctc): CTC(
+    (ctc_lo): Linear(in_features=256, out_features=5002, bias=True)
+    (ctc_loss): CTCLoss()
+  )
+  (criterion_att): LabelSmoothingLoss(
+    (criterion): KLDivLoss()
+  )
+)
+the number of model params: 46789396
+2022-06-03 12:46:04,735 INFO Epoch 77 TRAIN info lr 1.6e-07
+2022-06-03 12:46:04,737 INFO using accumulate grad, new batch size is 1 times larger than before
+ASRModel(
+  (encoder): ConformerEncoder(
+    (global_cmvn): GlobalCMVN()
+    (embed): Conv2dSubsampling4(
+      (conv): Sequential(
+        (0): Conv2d(1, 256, kernel_size=(3, 3), stride=(2, 2))
+        (1): ReLU()
+        (2): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 2))
+        (3): ReLU()
+      )
+      (out): Sequential(
+        (0): Linear(in_features=4864, out_features=256, bias=True)
+      )
+      (pos_enc): RelPositionalEncoding(
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (after_norm): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+    (encoders): ModuleList(
+      (0): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (1): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (2): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (3): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (4): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (5): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (6): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (7): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (8): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (9): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (10): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (11): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+    )
+  )
+  (decoder): TransformerDecoder(
+    (embed): Sequential(
+      (0): Embedding(5002, 256)
+      (1): PositionalEncoding(
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (after_norm): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+    (output_layer): Linear(in_features=256, out_features=5002, bias=True)
+    (decoders): ModuleList(
+      (0): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (1): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (2): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (3): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (4): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (5): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+    )
+  )
+  (ctc): CTC(
+    (ctc_lo): Linear(in_features=256, out_features=5002, bias=True)
+    (ctc_loss): CTCLoss()
+  )
+  (criterion_att): LabelSmoothingLoss(
+    (criterion): KLDivLoss()
+  )
+)
+the number of model params: 46789396
+2022-06-03 12:46:04,835 INFO Epoch 77 TRAIN info lr 1.6e-07
+2022-06-03 12:46:04,835 INFO Epoch 77 TRAIN info lr 1.6e-07
+2022-06-03 12:46:04,839 INFO using accumulate grad, new batch size is 1 times larger than before
+2022-06-03 12:46:04,839 INFO using accumulate grad, new batch size is 1 times larger than before
+ASRModel(
+  (encoder): ConformerEncoder(
+    (global_cmvn): GlobalCMVN()
+    (embed): Conv2dSubsampling4(
+      (conv): Sequential(
+        (0): Conv2d(1, 256, kernel_size=(3, 3), stride=(2, 2))
+        (1): ReLU()
+        (2): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 2))
+        (3): ReLU()
+      )
+      (out): Sequential(
+        (0): Linear(in_features=4864, out_features=256, bias=True)
+      )
+      (pos_enc): RelPositionalEncoding(
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (after_norm): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+    (encoders): ModuleList(
+      (0): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (1): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (2): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (3): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (4): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (5): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (6): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (7): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (8): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (9): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (10): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (11): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+    )
+  )
+  (decoder): TransformerDecoder(
+    (embed): Sequential(
+      (0): Embedding(5002, 256)
+      (1): PositionalEncoding(
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (after_norm): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+    (output_layer): Linear(in_features=256, out_features=5002, bias=True)
+    (decoders): ModuleList(
+      (0): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (1): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (2): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (3): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (4): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (5): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+    )
+  )
+  (ctc): CTC(
+    (ctc_lo): Linear(in_features=256, out_features=5002, bias=True)
+    (ctc_loss): CTCLoss()
+  )
+  (criterion_att): LabelSmoothingLoss(
+    (criterion): KLDivLoss()
+  )
+)
+the number of model params: 46789396
+ASRModel(
+  (encoder): ConformerEncoder(
+    (global_cmvn): GlobalCMVN()
+    (embed): Conv2dSubsampling4(
+      (conv): Sequential(
+        (0): Conv2d(1, 256, kernel_size=(3, 3), stride=(2, 2))
+        (1): ReLU()
+        (2): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 2))
+        (3): ReLU()
+      )
+      (out): Sequential(
+        (0): Linear(in_features=4864, out_features=256, bias=True)
+      )
+      (pos_enc): RelPositionalEncoding(
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (after_norm): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+    (encoders): ModuleList(
+      (0): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (1): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (2): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (3): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (4): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (5): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (6): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (7): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (8): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (9): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (10): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+      (11): ConformerEncoderLayer(
+        (self_attn): RelPositionMultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+          (linear_pos): Linear(in_features=256, out_features=256, bias=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (feed_forward_macaron): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): SiLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (conv_module): ConvolutionModule(
+          (pointwise_conv1): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          (depthwise_conv): Conv1d(256, 256, kernel_size=(15,), stride=(1,), padding=(7,), groups=256)
+          (norm): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (pointwise_conv2): Conv1d(256, 256, kernel_size=(1,), stride=(1,))
+          (activation): SiLU()
+        )
+        (norm_ff): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_mha): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_ff_macaron): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_conv): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm_final): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear): Identity()
+      )
+    )
+  )
+  (decoder): TransformerDecoder(
+    (embed): Sequential(
+      (0): Embedding(5002, 256)
+      (1): PositionalEncoding(
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (after_norm): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+    (output_layer): Linear(in_features=256, out_features=5002, bias=True)
+    (decoders): ModuleList(
+      (0): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (1): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (2): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (3): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (4): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+      (5): DecoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (src_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.0, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=2048, bias=True)
+          (activation): ReLU()
+          (dropout): Dropout(p=0.1, inplace=False)
+          (w_2): Linear(in_features=2048, out_features=256, bias=True)
+        )
+        (norm1): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (norm3): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (concat_linear1): Identity()
+        (concat_linear2): Identity()
+      )
+    )
+  )
+  (ctc): CTC(
+    (ctc_lo): Linear(in_features=256, out_features=5002, bias=True)
+    (ctc_loss): CTCLoss()
+  )
+  (criterion_att): LabelSmoothingLoss(
+    (criterion): KLDivLoss()
+  )
+)
+the number of model params: 46789396
+[W reducer.cpp:1303] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1303] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1303] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+[W reducer.cpp:1303] Warning: find_unused_parameters=True was specified in DDP constructor, but did not find any unused parameters in the forward pass. This flag results in an extra traversal of the autograd graph every iteration,  which can adversely affect performance. If your model indeed never has any unused parameters in the forward pass, consider turning this flag off. Note that this warning may be a false positive if your model has flow control causing later iterations to have unused parameters. (function operator())
+2022-06-03 12:47:37,090 DEBUG TRAIN Batch 77/0 loss 5.647841 loss_att 4.377765 loss_ctc 8.611353 lr 0.00092719 rank 3
+2022-06-03 12:47:37,096 DEBUG TRAIN Batch 77/0 loss 8.432639 loss_att 7.153724 loss_ctc 11.416775 lr 0.00092719 rank 0
+2022-06-03 12:47:37,131 DEBUG TRAIN Batch 77/0 loss 8.832716 loss_att 7.002389 loss_ctc 13.103477 lr 0.00092719 rank 1
+2022-06-03 12:47:37,210 DEBUG TRAIN Batch 77/0 loss 8.698591 loss_att 7.058789 loss_ctc 12.524796 lr 0.00092719 rank 2
+2022-06-03 12:48:27,838 DEBUG TRAIN Batch 77/100 loss 15.140240 loss_att 13.234775 loss_ctc 19.586323 lr 0.00092709 rank 2
+2022-06-03 12:48:27,839 DEBUG TRAIN Batch 77/100 loss 11.023758 loss_att 9.524779 loss_ctc 14.521376 lr 0.00092709 rank 3
+2022-06-03 12:48:27,840 DEBUG TRAIN Batch 77/100 loss 12.690996 loss_att 8.923174 loss_ctc 21.482580 lr 0.00092709 rank 1
+2022-06-03 12:48:27,846 DEBUG TRAIN Batch 77/100 loss 6.725624 loss_att 5.880049 loss_ctc 8.698634 lr 0.00092709 rank 0
+2022-06-03 12:50:04,980 DEBUG TRAIN Batch 77/200 loss 6.575578 loss_att 6.114298 loss_ctc 7.651899 lr 0.00092699 rank 2
+2022-06-03 12:50:04,986 DEBUG TRAIN Batch 77/200 loss 12.807207 loss_att 11.553556 loss_ctc 15.732391 lr 0.00092699 rank 3
+2022-06-03 12:50:04,988 DEBUG TRAIN Batch 77/200 loss 13.640825 loss_att 11.862396 loss_ctc 17.790493 lr 0.00092699 rank 0
+2022-06-03 12:50:05,040 DEBUG TRAIN Batch 77/200 loss 12.683414 loss_att 9.893063 loss_ctc 19.194237 lr 0.00092699 rank 1
+2022-06-03 12:50:57,441 DEBUG TRAIN Batch 77/300 loss 14.615125 loss_att 12.748525 loss_ctc 18.970524 lr 0.00092689 rank 2
+2022-06-03 12:50:57,441 DEBUG TRAIN Batch 77/300 loss 13.012491 loss_att 12.154854 loss_ctc 15.013645 lr 0.00092689 rank 3
+2022-06-03 12:50:57,442 DEBUG TRAIN Batch 77/300 loss 26.782528 loss_att 19.514402 loss_ctc 43.741489 lr 0.00092689 rank 1
+2022-06-03 12:50:57,451 DEBUG TRAIN Batch 77/300 loss 9.907747 loss_att 8.656832 loss_ctc 12.826549 lr 0.00092689 rank 0
+2022-06-03 12:52:30,622 DEBUG TRAIN Batch 77/400 loss 10.108301 loss_att 8.184402 loss_ctc 14.597399 lr 0.00092679 rank 1
+2022-06-03 12:52:30,627 DEBUG TRAIN Batch 77/400 loss 10.592169 loss_att 9.104863 loss_ctc 14.062548 lr 0.00092679 rank 2
+2022-06-03 12:52:30,627 DEBUG TRAIN Batch 77/400 loss 8.643257 loss_att 7.531075 loss_ctc 11.238350 lr 0.00092679 rank 3
+2022-06-03 12:52:30,658 DEBUG TRAIN Batch 77/400 loss 11.089260 loss_att 9.869506 loss_ctc 13.935350 lr 0.00092679 rank 0
+2022-06-03 12:54:02,019 DEBUG TRAIN Batch 77/500 loss 13.355987 loss_att 11.790834 loss_ctc 17.008009 lr 0.00092669 rank 3
+2022-06-03 12:54:02,042 DEBUG TRAIN Batch 77/500 loss 13.174641 loss_att 10.173659 loss_ctc 20.176929 lr 0.00092669 rank 2
+2022-06-03 12:54:02,081 DEBUG TRAIN Batch 77/500 loss 11.483429 loss_att 9.737884 loss_ctc 15.556366 lr 0.00092669 rank 1
+2022-06-03 12:54:02,083 DEBUG TRAIN Batch 77/500 loss 13.015216 loss_att 10.016300 loss_ctc 20.012684 lr 0.00092669 rank 0
+2022-06-03 12:54:53,651 DEBUG TRAIN Batch 77/600 loss 9.976706 loss_att 8.292160 loss_ctc 13.907312 lr 0.00092660 rank 3
+2022-06-03 12:54:53,659 DEBUG TRAIN Batch 77/600 loss 11.012116 loss_att 9.187862 loss_ctc 15.268708 lr 0.00092660 rank 1
+2022-06-03 12:54:53,659 DEBUG TRAIN Batch 77/600 loss 9.889090 loss_att 8.794509 loss_ctc 12.443110 lr 0.00092660 rank 2
+2022-06-03 12:54:53,667 DEBUG TRAIN Batch 77/600 loss 13.655113 loss_att 11.481345 loss_ctc 18.727240 lr 0.00092660 rank 0
+2022-06-03 12:56:29,744 DEBUG TRAIN Batch 77/700 loss 11.141813 loss_att 9.370083 loss_ctc 15.275849 lr 0.00092650 rank 2
+2022-06-03 12:56:29,745 DEBUG TRAIN Batch 77/700 loss 13.772864 loss_att 11.154958 loss_ctc 19.881313 lr 0.00092650 rank 1
+2022-06-03 12:56:29,748 DEBUG TRAIN Batch 77/700 loss 12.244383 loss_att 10.555317 loss_ctc 16.185535 lr 0.00092650 rank 3
+2022-06-03 12:56:29,756 DEBUG TRAIN Batch 77/700 loss 10.086023 loss_att 8.607365 loss_ctc 13.536225 lr 0.00092650 rank 0
+2022-06-03 12:57:20,798 DEBUG TRAIN Batch 77/800 loss 17.075722 loss_att 13.427428 loss_ctc 25.588404 lr 0.00092640 rank 3
+2022-06-03 12:57:20,801 DEBUG TRAIN Batch 77/800 loss 13.760775 loss_att 10.629083 loss_ctc 21.068054 lr 0.00092640 rank 2
+2022-06-03 12:57:20,806 DEBUG TRAIN Batch 77/800 loss 11.030458 loss_att 9.170757 loss_ctc 15.369761 lr 0.00092640 rank 1
+2022-06-03 12:57:20,809 DEBUG TRAIN Batch 77/800 loss 9.783694 loss_att 8.425754 loss_ctc 12.952223 lr 0.00092640 rank 0
+2022-06-03 12:58:55,127 DEBUG TRAIN Batch 77/900 loss 8.745614 loss_att 7.940951 loss_ctc 10.623160 lr 0.00092630 rank 3
+2022-06-03 12:58:55,128 DEBUG TRAIN Batch 77/900 loss 11.262651 loss_att 9.618101 loss_ctc 15.099934 lr 0.00092630 rank 2
+2022-06-03 12:58:55,130 DEBUG TRAIN Batch 77/900 loss 6.629580 loss_att 5.511364 loss_ctc 9.238750 lr 0.00092630 rank 1
+2022-06-03 12:58:55,139 DEBUG TRAIN Batch 77/900 loss 12.463840 loss_att 10.275088 loss_ctc 17.570927 lr 0.00092630 rank 0
+2022-06-03 12:59:47,339 DEBUG TRAIN Batch 77/1000 loss 9.935991 loss_att 9.143765 loss_ctc 11.784519 lr 0.00092620 rank 3
+2022-06-03 12:59:47,342 DEBUG TRAIN Batch 77/1000 loss 13.933482 loss_att 11.516818 loss_ctc 19.572365 lr 0.00092620 rank 2
+2022-06-03 12:59:47,346 DEBUG TRAIN Batch 77/1000 loss 14.468783 loss_att 12.760281 loss_ctc 18.455288 lr 0.00092620 rank 0
+2022-06-03 12:59:47,397 DEBUG TRAIN Batch 77/1000 loss 12.360371 loss_att 10.272064 loss_ctc 17.233084 lr 0.00092620 rank 1
+2022-06-03 13:01:21,281 DEBUG TRAIN Batch 77/1100 loss 9.924479 loss_att 7.822628 loss_ctc 14.828799 lr 0.00092610 rank 2
+2022-06-03 13:01:21,283 DEBUG TRAIN Batch 77/1100 loss 11.658751 loss_att 10.653461 loss_ctc 14.004425 lr 0.00092610 rank 3
+2022-06-03 13:01:21,288 DEBUG TRAIN Batch 77/1100 loss 11.835844 loss_att 9.792201 loss_ctc 16.604343 lr 0.00092610 rank 1
+2022-06-03 13:01:21,291 DEBUG TRAIN Batch 77/1100 loss 12.013760 loss_att 9.306862 loss_ctc 18.329853 lr 0.00092610 rank 0
+2022-06-03 13:02:56,456 DEBUG TRAIN Batch 77/1200 loss 7.884033 loss_att 7.446178 loss_ctc 8.905695 lr 0.00092600 rank 2
+2022-06-03 13:02:56,460 DEBUG TRAIN Batch 77/1200 loss 9.103365 loss_att 8.311674 loss_ctc 10.950642 lr 0.00092600 rank 1
+2022-06-03 13:02:56,464 DEBUG TRAIN Batch 77/1200 loss 16.194225 loss_att 12.481013 loss_ctc 24.858383 lr 0.00092600 rank 0
+2022-06-03 13:02:56,508 DEBUG TRAIN Batch 77/1200 loss 9.310236 loss_att 8.025072 loss_ctc 12.308950 lr 0.00092600 rank 3
+2022-06-03 13:03:47,681 DEBUG TRAIN Batch 77/1300 loss 6.609895 loss_att 5.974473 loss_ctc 8.092545 lr 0.00092590 rank 3
+2022-06-03 13:03:47,689 DEBUG TRAIN Batch 77/1300 loss 9.144654 loss_att 8.013428 loss_ctc 11.784183 lr 0.00092590 rank 2
+2022-06-03 13:03:47,703 DEBUG TRAIN Batch 77/1300 loss 9.399446 loss_att 7.760408 loss_ctc 13.223866 lr 0.00092590 rank 0
+2022-06-03 13:03:47,717 DEBUG TRAIN Batch 77/1300 loss 9.851204 loss_att 8.367264 loss_ctc 13.313730 lr 0.00092590 rank 1
+2022-06-03 13:05:23,352 DEBUG TRAIN Batch 77/1400 loss 8.844940 loss_att 7.439627 loss_ctc 12.124004 lr 0.00092580 rank 3
+2022-06-03 13:05:23,354 DEBUG TRAIN Batch 77/1400 loss 8.683359 loss_att 7.533367 loss_ctc 11.366674 lr 0.00092580 rank 2
+2022-06-03 13:05:23,357 DEBUG TRAIN Batch 77/1400 loss 8.758589 loss_att 7.362018 loss_ctc 12.017254 lr 0.00092580 rank 0
+2022-06-03 13:05:23,415 DEBUG TRAIN Batch 77/1400 loss 11.124722 loss_att 9.977533 loss_ctc 13.801497 lr 0.00092580 rank 1
+2022-06-03 13:06:14,304 DEBUG TRAIN Batch 77/1500 loss 11.435130 loss_att 8.473861 loss_ctc 18.344757 lr 0.00092570 rank 3
+2022-06-03 13:06:14,308 DEBUG TRAIN Batch 77/1500 loss 8.680845 loss_att 7.983208 loss_ctc 10.308664 lr 0.00092570 rank 1
+2022-06-03 13:06:14,308 DEBUG TRAIN Batch 77/1500 loss 9.620415 loss_att 7.718242 loss_ctc 14.058819 lr 0.00092570 rank 2
+2022-06-03 13:06:14,402 DEBUG TRAIN Batch 77/1500 loss 14.785652 loss_att 12.574151 loss_ctc 19.945820 lr 0.00092570 rank 0
+2022-06-03 13:07:50,790 DEBUG TRAIN Batch 77/1600 loss 11.330819 loss_att 9.228939 loss_ctc 16.235207 lr 0.00092560 rank 3
+2022-06-03 13:07:50,794 DEBUG TRAIN Batch 77/1600 loss 9.516414 loss_att 8.021391 loss_ctc 13.004801 lr 0.00092560 rank 2
+2022-06-03 13:07:50,799 DEBUG TRAIN Batch 77/1600 loss 12.772312 loss_att 11.396942 loss_ctc 15.981507 lr 0.00092560 rank 1
+2022-06-03 13:07:50,809 DEBUG TRAIN Batch 77/1600 loss 9.863451 loss_att 8.230605 loss_ctc 13.673426 lr 0.00092560 rank 0
+2022-06-03 13:09:22,848 DEBUG TRAIN Batch 77/1700 loss 15.582401 loss_att 13.302176 loss_ctc 20.902927 lr 0.00092550 rank 2
+2022-06-03 13:09:22,852 DEBUG TRAIN Batch 77/1700 loss 8.231782 loss_att 7.422992 loss_ctc 10.118959 lr 0.00092550 rank 1
+2022-06-03 13:09:22,856 DEBUG TRAIN Batch 77/1700 loss 10.749488 loss_att 10.302135 loss_ctc 11.793312 lr 0.00092550 rank 0
+2022-06-03 13:09:22,859 DEBUG TRAIN Batch 77/1700 loss 9.068070 loss_att 8.278641 loss_ctc 10.910072 lr 0.00092550 rank 3
+2022-06-03 13:10:14,363 DEBUG TRAIN Batch 77/1800 loss 12.306911 loss_att 10.066057 loss_ctc 17.535572 lr 0.00092540 rank 3
+2022-06-03 13:10:14,365 DEBUG TRAIN Batch 77/1800 loss 9.579108 loss_att 7.879806 loss_ctc 13.544147 lr 0.00092540 rank 2
+2022-06-03 13:10:14,370 DEBUG TRAIN Batch 77/1800 loss 13.985283 loss_att 10.937254 loss_ctc 21.097351 lr 0.00092540 rank 1
+2022-06-03 13:10:14,382 DEBUG TRAIN Batch 77/1800 loss 14.172192 loss_att 12.478164 loss_ctc 18.124922 lr 0.00092540 rank 0
+2022-06-03 13:11:47,948 DEBUG TRAIN Batch 77/1900 loss 11.153330 loss_att 9.236490 loss_ctc 15.625954 lr 0.00092531 rank 2
+2022-06-03 13:11:47,951 DEBUG TRAIN Batch 77/1900 loss 9.828051 loss_att 8.233051 loss_ctc 13.549716 lr 0.00092531 rank 3
+2022-06-03 13:11:47,953 DEBUG TRAIN Batch 77/1900 loss 7.825941 loss_att 7.256660 loss_ctc 9.154264 lr 0.00092531 rank 1
+2022-06-03 13:11:47,957 DEBUG TRAIN Batch 77/1900 loss 13.467840 loss_att 12.648149 loss_ctc 15.380450 lr 0.00092531 rank 0
+2022-06-03 13:12:38,504 DEBUG TRAIN Batch 77/2000 loss 10.109901 loss_att 8.924445 loss_ctc 12.875968 lr 0.00092521 rank 3
+2022-06-03 13:12:38,506 DEBUG TRAIN Batch 77/2000 loss 9.046016 loss_att 7.826611 loss_ctc 11.891295 lr 0.00092521 rank 2
+2022-06-03 13:12:38,517 DEBUG TRAIN Batch 77/2000 loss 16.427944 loss_att 12.999552 loss_ctc 24.427526 lr 0.00092521 rank 1
+2022-06-03 13:12:38,532 DEBUG TRAIN Batch 77/2000 loss 14.816347 loss_att 10.622908 loss_ctc 24.601040 lr 0.00092521 rank 0
+2022-06-03 13:14:15,183 DEBUG TRAIN Batch 77/2100 loss 8.949062 loss_att 7.702340 loss_ctc 11.858083 lr 0.00092511 rank 2
+2022-06-03 13:14:15,184 DEBUG TRAIN Batch 77/2100 loss 20.853813 loss_att 16.608519 loss_ctc 30.759497 lr 0.00092511 rank 3
+2022-06-03 13:14:15,188 DEBUG TRAIN Batch 77/2100 loss 9.276330 loss_att 7.553094 loss_ctc 13.297213 lr 0.00092511 rank 1
+2022-06-03 13:14:15,200 DEBUG TRAIN Batch 77/2100 loss 7.073707 loss_att 5.796548 loss_ctc 10.053741 lr 0.00092511 rank 0
+2022-06-03 13:15:49,247 DEBUG TRAIN Batch 77/2200 loss 15.794009 loss_att 13.145159 loss_ctc 21.974661 lr 0.00092501 rank 3
+2022-06-03 13:15:49,248 DEBUG TRAIN Batch 77/2200 loss 14.629011 loss_att 12.087070 loss_ctc 20.560207 lr 0.00092501 rank 2
+2022-06-03 13:15:49,255 DEBUG TRAIN Batch 77/2200 loss 10.342947 loss_att 9.324000 loss_ctc 12.720489 lr 0.00092501 rank 1
+2022-06-03 13:15:49,263 DEBUG TRAIN Batch 77/2200 loss 9.655040 loss_att 8.540651 loss_ctc 12.255279 lr 0.00092501 rank 0
+2022-06-03 13:16:41,474 DEBUG TRAIN Batch 77/2300 loss 8.382394 loss_att 6.484483 loss_ctc 12.810852 lr 0.00092491 rank 2
+2022-06-03 13:16:41,474 DEBUG TRAIN Batch 77/2300 loss 6.942846 loss_att 5.892476 loss_ctc 9.393709 lr 0.00092491 rank 3
+2022-06-03 13:16:41,489 DEBUG TRAIN Batch 77/2300 loss 12.766243 loss_att 10.740751 loss_ctc 17.492392 lr 0.00092491 rank 0
+2022-06-03 13:16:41,535 DEBUG TRAIN Batch 77/2300 loss 9.801211 loss_att 8.636895 loss_ctc 12.517948 lr 0.00092491 rank 1
+2022-06-03 13:18:17,418 DEBUG TRAIN Batch 77/2400 loss 15.464993 loss_att 13.081981 loss_ctc 21.025352 lr 0.00092481 rank 2
+2022-06-03 13:18:17,419 DEBUG TRAIN Batch 77/2400 loss 12.947287 loss_att 10.452604 loss_ctc 18.768213 lr 0.00092481 rank 3
+2022-06-03 13:18:17,423 DEBUG TRAIN Batch 77/2400 loss 15.474420 loss_att 13.900434 loss_ctc 19.147053 lr 0.00092481 rank 1
+2022-06-03 13:18:17,425 DEBUG TRAIN Batch 77/2400 loss 7.040555 loss_att 6.328202 loss_ctc 8.702712 lr 0.00092481 rank 0
+2022-06-03 13:19:09,103 DEBUG TRAIN Batch 77/2500 loss 9.915585 loss_att 8.382912 loss_ctc 13.491818 lr 0.00092471 rank 3
+2022-06-03 13:19:09,104 DEBUG TRAIN Batch 77/2500 loss 13.513911 loss_att 12.073635 loss_ctc 16.874554 lr 0.00092471 rank 2
+2022-06-03 13:19:09,109 DEBUG TRAIN Batch 77/2500 loss 7.543496 loss_att 6.665647 loss_ctc 9.591812 lr 0.00092471 rank 1
+2022-06-03 13:19:09,116 DEBUG TRAIN Batch 77/2500 loss 16.222332 loss_att 13.228574 loss_ctc 23.207766 lr 0.00092471 rank 0
+2022-06-03 13:20:42,013 DEBUG TRAIN Batch 77/2600 loss 14.490438 loss_att 11.527540 loss_ctc 21.403870 lr 0.00092461 rank 3
+2022-06-03 13:20:42,020 DEBUG TRAIN Batch 77/2600 loss 12.075698 loss_att 10.529713 loss_ctc 15.682998 lr 0.00092461 rank 1
+2022-06-03 13:20:42,021 DEBUG TRAIN Batch 77/2600 loss 13.992375 loss_att 12.199076 loss_ctc 18.176743 lr 0.00092461 rank 2
+2022-06-03 13:20:42,030 DEBUG TRAIN Batch 77/2600 loss 18.600508 loss_att 17.275978 loss_ctc 21.691078 lr 0.00092461 rank 0
+2022-06-03 13:22:15,540 DEBUG TRAIN Batch 77/2700 loss 11.296522 loss_att 8.320085 loss_ctc 18.241543 lr 0.00092451 rank 2
+2022-06-03 13:22:15,543 DEBUG TRAIN Batch 77/2700 loss 12.665985 loss_att 10.523562 loss_ctc 17.664968 lr 0.00092451 rank 3
+2022-06-03 13:22:15,554 DEBUG TRAIN Batch 77/2700 loss 11.953976 loss_att 10.411307 loss_ctc 15.553533 lr 0.00092451 rank 0
+2022-06-03 13:22:15,601 DEBUG TRAIN Batch 77/2700 loss 6.560429 loss_att 5.970156 loss_ctc 7.937731 lr 0.00092451 rank 1
+2022-06-03 13:23:09,104 DEBUG TRAIN Batch 77/2800 loss 12.594721 loss_att 10.105831 loss_ctc 18.402130 lr 0.00092442 rank 2
+2022-06-03 13:23:09,107 DEBUG TRAIN Batch 77/2800 loss 15.842348 loss_att 11.651889 loss_ctc 25.620087 lr 0.00092442 rank 3
+2022-06-03 13:23:09,112 DEBUG TRAIN Batch 77/2800 loss 11.094070 loss_att 8.554263 loss_ctc 17.020285 lr 0.00092442 rank 1
+2022-06-03 13:23:09,119 DEBUG TRAIN Batch 77/2800 loss 15.973761 loss_att 12.136279 loss_ctc 24.927883 lr 0.00092442 rank 0
+2022-06-03 13:24:40,725 DEBUG TRAIN Batch 77/2900 loss 10.244165 loss_att 8.703534 loss_ctc 13.838969 lr 0.00092432 rank 2
+2022-06-03 13:24:40,728 DEBUG TRAIN Batch 77/2900 loss 8.944595 loss_att 8.097910 loss_ctc 10.920194 lr 0.00092432 rank 3
+2022-06-03 13:24:40,730 DEBUG TRAIN Batch 77/2900 loss 10.918863 loss_att 9.467795 loss_ctc 14.304689 lr 0.00092432 rank 1
+2022-06-03 13:24:40,742 DEBUG TRAIN Batch 77/2900 loss 7.469150 loss_att 5.887846 loss_ctc 11.158860 lr 0.00092432 rank 0
+2022-06-03 13:25:33,058 DEBUG TRAIN Batch 77/3000 loss 9.077698 loss_att 7.299261 loss_ctc 13.227385 lr 0.00092422 rank 3
+2022-06-03 13:25:33,060 DEBUG TRAIN Batch 77/3000 loss 9.075870 loss_att 7.547565 loss_ctc 12.641912 lr 0.00092422 rank 2
+2022-06-03 13:25:33,061 DEBUG TRAIN Batch 77/3000 loss 11.638146 loss_att 8.678130 loss_ctc 18.544851 lr 0.00092422 rank 1
+2022-06-03 13:25:33,069 DEBUG TRAIN Batch 77/3000 loss 12.921389 loss_att 10.559198 loss_ctc 18.433167 lr 0.00092422 rank 0
+2022-06-03 13:27:06,947 DEBUG TRAIN Batch 77/3100 loss 10.418203 loss_att 8.485883 loss_ctc 14.926952 lr 0.00092412 rank 3
+2022-06-03 13:27:06,948 DEBUG TRAIN Batch 77/3100 loss 10.608130 loss_att 8.720217 loss_ctc 15.013262 lr 0.00092412 rank 2
+2022-06-03 13:27:06,952 DEBUG TRAIN Batch 77/3100 loss 11.533125 loss_att 9.672646 loss_ctc 15.874244 lr 0.00092412 rank 1
+2022-06-03 13:27:06,965 DEBUG TRAIN Batch 77/3100 loss 12.276214 loss_att 9.236110 loss_ctc 19.369789 lr 0.00092412 rank 0
+2022-06-03 13:28:41,703 DEBUG TRAIN Batch 77/3200 loss 9.840586 loss_att 8.226154 loss_ctc 13.607591 lr 0.00092402 rank 1
+2022-06-03 13:28:41,705 DEBUG TRAIN Batch 77/3200 loss 7.938297 loss_att 6.290195 loss_ctc 11.783868 lr 0.00092402 rank 2
+2022-06-03 13:28:41,715 DEBUG TRAIN Batch 77/3200 loss 9.854366 loss_att 8.551374 loss_ctc 12.894681 lr 0.00092402 rank 0
+2022-06-03 13:28:41,755 DEBUG TRAIN Batch 77/3200 loss 9.691952 loss_att 8.790967 loss_ctc 11.794248 lr 0.00092402 rank 3
+2022-06-03 13:29:33,207 DEBUG TRAIN Batch 77/3300 loss 8.153257 loss_att 7.335908 loss_ctc 10.060405 lr 0.00092392 rank 3
+2022-06-03 13:29:33,213 DEBUG TRAIN Batch 77/3300 loss 9.303574 loss_att 7.437415 loss_ctc 13.657945 lr 0.00092392 rank 2
+2022-06-03 13:29:33,216 DEBUG TRAIN Batch 77/3300 loss 15.045692 loss_att 12.067889 loss_ctc 21.993900 lr 0.00092392 rank 1
+2022-06-03 13:29:33,220 DEBUG TRAIN Batch 77/3300 loss 8.309056 loss_att 6.690886 loss_ctc 12.084785 lr 0.00092392 rank 0
+2022-06-03 13:31:06,436 DEBUG TRAIN Batch 77/3400 loss 12.314367 loss_att 8.578977 loss_ctc 21.030279 lr 0.00092382 rank 3
+2022-06-03 13:31:06,439 DEBUG TRAIN Batch 77/3400 loss 10.599370 loss_att 9.518130 loss_ctc 13.122262 lr 0.00092382 rank 2
+2022-06-03 13:31:06,441 DEBUG TRAIN Batch 77/3400 loss 9.686595 loss_att 8.513756 loss_ctc 12.423220 lr 0.00092382 rank 1
+2022-06-03 13:31:06,452 DEBUG TRAIN Batch 77/3400 loss 7.319872 loss_att 6.303906 loss_ctc 9.690459 lr 0.00092382 rank 0
+2022-06-03 13:31:58,285 DEBUG TRAIN Batch 77/3500 loss 10.189584 loss_att 8.366229 loss_ctc 14.444077 lr 0.00092372 rank 2
+2022-06-03 13:31:58,288 DEBUG TRAIN Batch 77/3500 loss 9.077435 loss_att 7.819360 loss_ctc 12.012941 lr 0.00092372 rank 1
+2022-06-03 13:31:58,288 DEBUG TRAIN Batch 77/3500 loss 15.335301 loss_att 11.816708 loss_ctc 23.545353 lr 0.00092372 rank 3
+2022-06-03 13:31:58,350 DEBUG TRAIN Batch 77/3500 loss 13.556936 loss_att 11.253527 loss_ctc 18.931559 lr 0.00092372 rank 0
+2022-06-03 13:33:31,224 DEBUG TRAIN Batch 77/3600 loss 12.428952 loss_att 11.604533 loss_ctc 14.352598 lr 0.00092363 rank 3
+2022-06-03 13:33:31,232 DEBUG TRAIN Batch 77/3600 loss 9.011823 loss_att 7.440458 loss_ctc 12.678339 lr 0.00092363 rank 1
+2022-06-03 13:33:31,233 DEBUG TRAIN Batch 77/3600 loss 8.896746 loss_att 7.960801 loss_ctc 11.080614 lr 0.00092363 rank 2
+2022-06-03 13:33:31,240 DEBUG TRAIN Batch 77/3600 loss 13.108910 loss_att 10.964714 loss_ctc 18.112034 lr 0.00092363 rank 0
+2022-06-03 13:35:02,318 DEBUG TRAIN Batch 77/3700 loss 7.829840 loss_att 6.522044 loss_ctc 10.881364 lr 0.00092353 rank 2
+2022-06-03 13:35:02,319 DEBUG TRAIN Batch 77/3700 loss 11.219156 loss_att 9.893091 loss_ctc 14.313306 lr 0.00092353 rank 3
+2022-06-03 13:35:02,324 DEBUG TRAIN Batch 77/3700 loss 15.495039 loss_att 13.005328 loss_ctc 21.304365 lr 0.00092353 rank 1
+2022-06-03 13:35:02,327 DEBUG TRAIN Batch 77/3700 loss 7.735810 loss_att 6.295004 loss_ctc 11.097690 lr 0.00092353 rank 0
+2022-06-03 13:35:53,399 DEBUG TRAIN Batch 77/3800 loss 14.426901 loss_att 12.245618 loss_ctc 19.516560 lr 0.00092343 rank 3
+2022-06-03 13:35:53,399 DEBUG TRAIN Batch 77/3800 loss 14.969767 loss_att 12.728746 loss_ctc 20.198814 lr 0.00092343 rank 2
+2022-06-03 13:35:53,402 DEBUG TRAIN Batch 77/3800 loss 10.722593 loss_att 8.505632 loss_ctc 15.895500 lr 0.00092343 rank 1
+2022-06-03 13:35:53,466 DEBUG TRAIN Batch 77/3800 loss 16.217703 loss_att 13.022571 loss_ctc 23.673010 lr 0.00092343 rank 0
+2022-06-03 13:37:24,782 DEBUG TRAIN Batch 77/3900 loss 13.319370 loss_att 12.028835 loss_ctc 16.330622 lr 0.00092333 rank 2
+2022-06-03 13:37:24,783 DEBUG TRAIN Batch 77/3900 loss 14.225399 loss_att 11.873517 loss_ctc 19.713123 lr 0.00092333 rank 3
+2022-06-03 13:37:24,789 DEBUG TRAIN Batch 77/3900 loss 8.856534 loss_att 8.293586 loss_ctc 10.170079 lr 0.00092333 rank 1
+2022-06-03 13:37:24,800 DEBUG TRAIN Batch 77/3900 loss 10.154982 loss_att 7.582411 loss_ctc 16.157646 lr 0.00092333 rank 0
+2022-06-03 13:38:17,163 DEBUG TRAIN Batch 77/4000 loss 12.165575 loss_att 9.868073 loss_ctc 17.526413 lr 0.00092323 rank 2
+2022-06-03 13:38:17,170 DEBUG TRAIN Batch 77/4000 loss 11.803387 loss_att 9.351107 loss_ctc 17.525372 lr 0.00092323 rank 3
+2022-06-03 13:38:17,177 DEBUG TRAIN Batch 77/4000 loss 18.175186 loss_att 15.479853 loss_ctc 24.464294 lr 0.00092323 rank 1
+2022-06-03 13:38:17,178 DEBUG TRAIN Batch 77/4000 loss 9.553036 loss_att 7.991271 loss_ctc 13.197153 lr 0.00092323 rank 0
+2022-06-03 13:39:48,100 DEBUG TRAIN Batch 77/4100 loss 7.399737 loss_att 6.255383 loss_ctc 10.069899 lr 0.00092313 rank 2
+2022-06-03 13:39:48,101 DEBUG TRAIN Batch 77/4100 loss 12.073677 loss_att 9.245760 loss_ctc 18.672152 lr 0.00092313 rank 3
+2022-06-03 13:39:48,113 DEBUG TRAIN Batch 77/4100 loss 9.334160 loss_att 8.429979 loss_ctc 11.443914 lr 0.00092313 rank 0
+2022-06-03 13:39:48,159 DEBUG TRAIN Batch 77/4100 loss 23.884699 loss_att 20.160496 loss_ctc 32.574505 lr 0.00092313 rank 1
+2022-06-03 13:40:41,573 DEBUG TRAIN Batch 77/4200 loss 15.628511 loss_att 10.529200 loss_ctc 27.526905 lr 0.00092304 rank 3
+2022-06-03 13:40:41,582 DEBUG TRAIN Batch 77/4200 loss 9.690660 loss_att 8.335048 loss_ctc 12.853758 lr 0.00092304 rank 1
+2022-06-03 13:40:41,584 DEBUG TRAIN Batch 77/4200 loss 12.776537 loss_att 10.357132 loss_ctc 18.421814 lr 0.00092304 rank 2
+2022-06-03 13:40:41,591 DEBUG TRAIN Batch 77/4200 loss 15.097040 loss_att 11.186706 loss_ctc 24.221153 lr 0.00092304 rank 0
+2022-06-03 13:42:11,071 DEBUG TRAIN Batch 77/4300 loss 16.563663 loss_att 12.633060 loss_ctc 25.735075 lr 0.00092294 rank 3
+2022-06-03 13:42:11,074 DEBUG TRAIN Batch 77/4300 loss 14.217734 loss_att 11.198794 loss_ctc 21.261927 lr 0.00092294 rank 2
+2022-06-03 13:42:11,075 DEBUG TRAIN Batch 77/4300 loss 11.305393 loss_att 8.874261 loss_ctc 16.978035 lr 0.00092294 rank 1
+2022-06-03 13:42:11,086 DEBUG TRAIN Batch 77/4300 loss 14.032213 loss_att 11.676776 loss_ctc 19.528234 lr 0.00092294 rank 0
+2022-06-03 13:43:46,162 DEBUG TRAIN Batch 77/4400 loss 13.419437 loss_att 10.611193 loss_ctc 19.972010 lr 0.00092284 rank 2
+2022-06-03 13:43:46,167 DEBUG TRAIN Batch 77/4400 loss 11.667549 loss_att 9.607409 loss_ctc 16.474541 lr 0.00092284 rank 1
+2022-06-03 13:43:46,167 DEBUG TRAIN Batch 77/4400 loss 14.420433 loss_att 12.024238 loss_ctc 20.011553 lr 0.00092284 rank 3
+2022-06-03 13:43:46,180 DEBUG TRAIN Batch 77/4400 loss 8.346775 loss_att 7.122101 loss_ctc 11.204349 lr 0.00092284 rank 0
+2022-06-03 13:44:37,091 DEBUG TRAIN Batch 77/4500 loss 11.808601 loss_att 9.094945 loss_ctc 18.140467 lr 0.00092274 rank 2
+2022-06-03 13:44:37,096 DEBUG TRAIN Batch 77/4500 loss 10.084339 loss_att 8.000913 loss_ctc 14.945668 lr 0.00092274 rank 3
+2022-06-03 13:44:37,102 DEBUG TRAIN Batch 77/4500 loss 12.313994 loss_att 10.065940 loss_ctc 17.559454 lr 0.00092274 rank 0
+2022-06-03 13:44:37,153 DEBUG TRAIN Batch 77/4500 loss 17.699005 loss_att 14.508898 loss_ctc 25.142588 lr 0.00092274 rank 1
+2022-06-03 13:46:10,158 DEBUG TRAIN Batch 77/4600 loss 7.683896 loss_att 5.808801 loss_ctc 12.059116 lr 0.00092264 rank 3
+2022-06-03 13:46:10,159 DEBUG TRAIN Batch 77/4600 loss 11.575191 loss_att 9.442430 loss_ctc 16.551636 lr 0.00092264 rank 2
+2022-06-03 13:46:10,160 DEBUG TRAIN Batch 77/4600 loss 15.335495 loss_att 12.681091 loss_ctc 21.529102 lr 0.00092264 rank 1
+2022-06-03 13:46:10,171 DEBUG TRAIN Batch 77/4600 loss 11.191486 loss_att 8.930523 loss_ctc 16.467066 lr 0.00092264 rank 0
+2022-06-03 13:47:02,887 DEBUG TRAIN Batch 77/4700 loss 14.031137 loss_att 13.396426 loss_ctc 15.512127 lr 0.00092254 rank 3
+2022-06-03 13:47:02,888 DEBUG TRAIN Batch 77/4700 loss 7.725266 loss_att 6.785103 loss_ctc 9.918981 lr 0.00092254 rank 2
+2022-06-03 13:47:02,910 DEBUG TRAIN Batch 77/4700 loss 15.390983 loss_att 12.837776 loss_ctc 21.348463 lr 0.00092254 rank 1
+2022-06-03 13:47:02,920 DEBUG TRAIN Batch 77/4700 loss 10.117107 loss_att 8.673771 loss_ctc 13.484890 lr 0.00092254 rank 0
+2022-06-03 13:48:38,297 DEBUG TRAIN Batch 77/4800 loss 9.894375 loss_att 8.466807 loss_ctc 13.225367 lr 0.00092245 rank 3
+2022-06-03 13:48:38,298 DEBUG TRAIN Batch 77/4800 loss 12.234505 loss_att 10.907086 loss_ctc 15.331816 lr 0.00092245 rank 2
+2022-06-03 13:48:38,300 DEBUG TRAIN Batch 77/4800 loss 15.533714 loss_att 11.914302 loss_ctc 23.979008 lr 0.00092245 rank 1
+2022-06-03 13:48:38,308 DEBUG TRAIN Batch 77/4800 loss 12.139954 loss_att 10.196339 loss_ctc 16.675056 lr 0.00092245 rank 0
+2022-06-03 13:50:12,101 DEBUG TRAIN Batch 77/4900 loss 13.908642 loss_att 11.269073 loss_ctc 20.067635 lr 0.00092235 rank 1
+2022-06-03 13:50:12,102 DEBUG TRAIN Batch 77/4900 loss 10.904169 loss_att 8.918702 loss_ctc 15.536925 lr 0.00092235 rank 2
+2022-06-03 13:50:12,110 DEBUG TRAIN Batch 77/4900 loss 11.129599 loss_att 9.245398 loss_ctc 15.526068 lr 0.00092235 rank 0
+2022-06-03 13:50:12,146 DEBUG TRAIN Batch 77/4900 loss 10.458399 loss_att 8.593575 loss_ctc 14.809656 lr 0.00092235 rank 3
+2022-06-03 13:51:03,492 DEBUG TRAIN Batch 77/5000 loss 11.688843 loss_att 10.445314 loss_ctc 14.590410 lr 0.00092225 rank 2
+2022-06-03 13:51:03,494 DEBUG TRAIN Batch 77/5000 loss 12.858519 loss_att 11.548713 loss_ctc 15.914734 lr 0.00092225 rank 3
+2022-06-03 13:51:03,505 DEBUG TRAIN Batch 77/5000 loss 6.832279 loss_att 5.738319 loss_ctc 9.384853 lr 0.00092225 rank 0
+2022-06-03 13:51:03,564 DEBUG TRAIN Batch 77/5000 loss 13.523935 loss_att 11.188969 loss_ctc 18.972193 lr 0.00092225 rank 1
+2022-06-03 13:52:34,131 DEBUG TRAIN Batch 77/5100 loss 10.395947 loss_att 8.545866 loss_ctc 14.712803 lr 0.00092215 rank 3
+2022-06-03 13:52:34,133 DEBUG TRAIN Batch 77/5100 loss 10.254897 loss_att 8.114004 loss_ctc 15.250313 lr 0.00092215 rank 1
+2022-06-03 13:52:34,133 DEBUG TRAIN Batch 77/5100 loss 14.353423 loss_att 12.957003 loss_ctc 17.611738 lr 0.00092215 rank 2
+2022-06-03 13:52:34,145 DEBUG TRAIN Batch 77/5100 loss 9.250754 loss_att 7.612594 loss_ctc 13.073127 lr 0.00092215 rank 0
+2022-06-03 13:53:25,033 DEBUG TRAIN Batch 77/5200 loss 7.611087 loss_att 6.731253 loss_ctc 9.664032 lr 0.00092205 rank 3
+2022-06-03 13:53:25,034 DEBUG TRAIN Batch 77/5200 loss 8.440766 loss_att 7.608291 loss_ctc 10.383209 lr 0.00092205 rank 2
+2022-06-03 13:53:25,040 DEBUG TRAIN Batch 77/5200 loss 9.709924 loss_att 7.791314 loss_ctc 14.186681 lr 0.00092205 rank 1
+2022-06-03 13:53:25,047 DEBUG TRAIN Batch 77/5200 loss 7.523117 loss_att 6.647245 loss_ctc 9.566816 lr 0.00092205 rank 0
+2022-06-03 13:55:01,597 DEBUG TRAIN Batch 77/5300 loss 8.117930 loss_att 7.048299 loss_ctc 10.613737 lr 0.00092196 rank 0
+2022-06-03 13:55:01,600 DEBUG TRAIN Batch 77/5300 loss 12.406572 loss_att 10.341028 loss_ctc 17.226173 lr 0.00092196 rank 2
+2022-06-03 13:55:01,634 DEBUG TRAIN Batch 77/5300 loss 11.881313 loss_att 10.223759 loss_ctc 15.748941 lr 0.00092196 rank 3
+2022-06-03 13:55:01,680 DEBUG TRAIN Batch 77/5300 loss 11.575274 loss_att 9.392604 loss_ctc 16.668169 lr 0.00092196 rank 1
+2022-06-03 13:56:36,234 DEBUG TRAIN Batch 77/5400 loss 16.798038 loss_att 14.367130 loss_ctc 22.470161 lr 0.00092186 rank 2
+2022-06-03 13:56:36,243 DEBUG TRAIN Batch 77/5400 loss 7.796485 loss_att 6.402638 loss_ctc 11.048797 lr 0.00092186 rank 1
+2022-06-03 13:56:36,250 DEBUG TRAIN Batch 77/5400 loss 10.647364 loss_att 8.868526 loss_ctc 14.797984 lr 0.00092186 rank 0
+2022-06-03 13:56:36,291 DEBUG TRAIN Batch 77/5400 loss 17.072067 loss_att 13.525927 loss_ctc 25.346399 lr 0.00092186 rank 3
+2022-06-03 13:57:28,710 DEBUG TRAIN Batch 77/5500 loss 9.375175 loss_att 7.581033 loss_ctc 13.561507 lr 0.00092176 rank 3
+2022-06-03 13:57:28,714 DEBUG TRAIN Batch 77/5500 loss 10.472923 loss_att 8.914068 loss_ctc 14.110252 lr 0.00092176 rank 2
+2022-06-03 13:57:28,715 DEBUG TRAIN Batch 77/5500 loss 15.218660 loss_att 12.829712 loss_ctc 20.792873 lr 0.00092176 rank 1
+2022-06-03 13:57:28,781 DEBUG TRAIN Batch 77/5500 loss 14.086446 loss_att 12.371109 loss_ctc 18.088900 lr 0.00092176 rank 0
+2022-06-03 13:58:59,838 DEBUG TRAIN Batch 77/5600 loss 12.504435 loss_att 10.741285 loss_ctc 16.618448 lr 0.00092166 rank 1
+2022-06-03 13:58:59,839 DEBUG TRAIN Batch 77/5600 loss 9.155352 loss_att 8.084846 loss_ctc 11.653196 lr 0.00092166 rank 3
+2022-06-03 13:58:59,841 DEBUG TRAIN Batch 77/5600 loss 11.192986 loss_att 10.202486 loss_ctc 13.504148 lr 0.00092166 rank 2
+2022-06-03 13:58:59,849 DEBUG TRAIN Batch 77/5600 loss 14.325794 loss_att 11.492667 loss_ctc 20.936424 lr 0.00092166 rank 0
+2022-06-03 13:59:51,730 DEBUG TRAIN Batch 77/5700 loss 9.985601 loss_att 8.344600 loss_ctc 13.814607 lr 0.00092157 rank 2
+2022-06-03 13:59:51,731 DEBUG TRAIN Batch 77/5700 loss 15.502474 loss_att 12.762592 loss_ctc 21.895531 lr 0.00092157 rank 3
+2022-06-03 13:59:51,735 DEBUG TRAIN Batch 77/5700 loss 9.724778 loss_att 8.858706 loss_ctc 11.745610 lr 0.00092157 rank 1
+2022-06-03 13:59:51,739 DEBUG TRAIN Batch 77/5700 loss 11.007491 loss_att 9.172105 loss_ctc 15.290060 lr 0.00092157 rank 0
+2022-06-03 14:01:23,435 DEBUG TRAIN Batch 77/5800 loss 9.767387 loss_att 7.735310 loss_ctc 14.508900 lr 0.00092147 rank 2
+2022-06-03 14:01:23,438 DEBUG TRAIN Batch 77/5800 loss 14.799387 loss_att 12.167385 loss_ctc 20.940723 lr 0.00092147 rank 3
+2022-06-03 14:01:23,439 DEBUG TRAIN Batch 77/5800 loss 11.864027 loss_att 10.000811 loss_ctc 16.211533 lr 0.00092147 rank 1
+2022-06-03 14:01:23,452 DEBUG TRAIN Batch 77/5800 loss 14.832258 loss_att 11.584328 loss_ctc 22.410763 lr 0.00092147 rank 0
+2022-06-03 14:02:56,344 DEBUG TRAIN Batch 77/5900 loss 12.125305 loss_att 9.822560 loss_ctc 17.498377 lr 0.00092137 rank 2
+2022-06-03 14:02:56,347 DEBUG TRAIN Batch 77/5900 loss 13.842091 loss_att 11.391372 loss_ctc 19.560434 lr 0.00092137 rank 3
+2022-06-03 14:02:56,352 DEBUG TRAIN Batch 77/5900 loss 12.241327 loss_att 10.968893 loss_ctc 15.210341 lr 0.00092137 rank 1
+2022-06-03 14:02:56,355 DEBUG TRAIN Batch 77/5900 loss 15.856443 loss_att 11.901216 loss_ctc 25.085306 lr 0.00092137 rank 0
+2022-06-03 14:03:49,261 DEBUG TRAIN Batch 77/6000 loss 8.175002 loss_att 6.507225 loss_ctc 12.066481 lr 0.00092127 rank 3
+2022-06-03 14:03:49,264 DEBUG TRAIN Batch 77/6000 loss 6.598825 loss_att 5.386497 loss_ctc 9.427588 lr 0.00092127 rank 2
+2022-06-03 14:03:49,268 DEBUG TRAIN Batch 77/6000 loss 9.700516 loss_att 7.813478 loss_ctc 14.103602 lr 0.00092127 rank 1
+2022-06-03 14:03:49,275 DEBUG TRAIN Batch 77/6000 loss 10.793009 loss_att 8.970083 loss_ctc 15.046504 lr 0.00092127 rank 0
+2022-06-03 14:05:22,138 DEBUG TRAIN Batch 77/6100 loss 8.687447 loss_att 7.422812 loss_ctc 11.638263 lr 0.00092117 rank 3
+2022-06-03 14:05:22,142 DEBUG TRAIN Batch 77/6100 loss 11.350140 loss_att 10.149792 loss_ctc 14.150953 lr 0.00092117 rank 1
+2022-06-03 14:05:22,143 DEBUG TRAIN Batch 77/6100 loss 11.674291 loss_att 9.405252 loss_ctc 16.968712 lr 0.00092117 rank 2
+2022-06-03 14:05:22,150 DEBUG TRAIN Batch 77/6100 loss 18.311249 loss_att 14.589043 loss_ctc 26.996391 lr 0.00092117 rank 0
+2022-06-03 14:06:15,103 DEBUG TRAIN Batch 77/6200 loss 11.247979 loss_att 9.674269 loss_ctc 14.919970 lr 0.00092108 rank 2
+2022-06-03 14:06:15,110 DEBUG TRAIN Batch 77/6200 loss 11.607147 loss_att 10.664577 loss_ctc 13.806479 lr 0.00092108 rank 1
+2022-06-03 14:06:15,118 DEBUG TRAIN Batch 77/6200 loss 11.120140 loss_att 8.481040 loss_ctc 17.278038 lr 0.00092108 rank 0
+2022-06-03 14:06:15,159 DEBUG TRAIN Batch 77/6200 loss 10.486707 loss_att 7.816123 loss_ctc 16.718069 lr 0.00092108 rank 3
+2022-06-03 14:07:46,530 DEBUG TRAIN Batch 77/6300 loss 9.497986 loss_att 8.128853 loss_ctc 12.692630 lr 0.00092098 rank 2
+2022-06-03 14:07:46,530 DEBUG TRAIN Batch 77/6300 loss 13.195421 loss_att 10.308840 loss_ctc 19.930775 lr 0.00092098 rank 3
+2022-06-03 14:07:46,546 DEBUG TRAIN Batch 77/6300 loss 9.324763 loss_att 8.986384 loss_ctc 10.114314 lr 0.00092098 rank 0
+2022-06-03 14:07:46,563 DEBUG TRAIN Batch 77/6300 loss 14.325824 loss_att 11.828561 loss_ctc 20.152771 lr 0.00092098 rank 1
+2022-06-03 14:09:18,639 DEBUG TRAIN Batch 77/6400 loss 9.453230 loss_att 7.869895 loss_ctc 13.147675 lr 0.00092088 rank 2
+2022-06-03 14:09:18,641 DEBUG TRAIN Batch 77/6400 loss 8.375708 loss_att 7.055658 loss_ctc 11.455823 lr 0.00092088 rank 3
+2022-06-03 14:09:18,641 DEBUG TRAIN Batch 77/6400 loss 10.787030 loss_att 8.645396 loss_ctc 15.784176 lr 0.00092088 rank 1
+2022-06-03 14:09:18,703 DEBUG TRAIN Batch 77/6400 loss 6.294776 loss_att 5.172536 loss_ctc 8.913334 lr 0.00092088 rank 0
+2022-06-03 14:10:11,111 DEBUG TRAIN Batch 77/6500 loss 14.790525 loss_att 12.559184 loss_ctc 19.996990 lr 0.00092078 rank 3
+2022-06-03 14:10:11,114 DEBUG TRAIN Batch 77/6500 loss 7.200755 loss_att 6.250863 loss_ctc 9.417170 lr 0.00092078 rank 1
+2022-06-03 14:10:11,114 DEBUG TRAIN Batch 77/6500 loss 9.828756 loss_att 8.193443 loss_ctc 13.644485 lr 0.00092078 rank 2
+2022-06-03 14:10:11,121 DEBUG TRAIN Batch 77/6500 loss 10.476775 loss_att 9.736418 loss_ctc 12.204275 lr 0.00092078 rank 0
+2022-06-03 14:11:42,332 DEBUG TRAIN Batch 77/6600 loss 9.745577 loss_att 8.087903 loss_ctc 13.613482 lr 0.00092069 rank 2
+2022-06-03 14:11:42,334 DEBUG TRAIN Batch 77/6600 loss 16.248543 loss_att 13.731161 loss_ctc 22.122433 lr 0.00092069 rank 1
+2022-06-03 14:11:42,336 DEBUG TRAIN Batch 77/6600 loss 12.863869 loss_att 10.130415 loss_ctc 19.241928 lr 0.00092069 rank 3
+2022-06-03 14:11:42,344 DEBUG TRAIN Batch 77/6600 loss 15.972521 loss_att 12.743861 loss_ctc 23.506058 lr 0.00092069 rank 0
+2022-06-03 14:12:33,566 DEBUG TRAIN Batch 77/6700 loss 17.381266 loss_att 13.938618 loss_ctc 25.414112 lr 0.00092059 rank 1
+2022-06-03 14:12:33,567 DEBUG TRAIN Batch 77/6700 loss 13.622224 loss_att 10.965837 loss_ctc 19.820459 lr 0.00092059 rank 2
+2022-06-03 14:12:33,567 DEBUG TRAIN Batch 77/6700 loss 10.222915 loss_att 8.146727 loss_ctc 15.067353 lr 0.00092059 rank 3
+2022-06-03 14:12:33,574 DEBUG TRAIN Batch 77/6700 loss 9.685410 loss_att 8.112009 loss_ctc 13.356676 lr 0.00092059 rank 0
+2022-06-03 14:14:08,133 DEBUG TRAIN Batch 77/6800 loss 18.610981 loss_att 12.957052 loss_ctc 31.803480 lr 0.00092049 rank 2
+2022-06-03 14:14:08,136 DEBUG TRAIN Batch 77/6800 loss 13.706930 loss_att 10.982770 loss_ctc 20.063303 lr 0.00092049 rank 3
+2022-06-03 14:14:08,140 DEBUG TRAIN Batch 77/6800 loss 8.830717 loss_att 7.484961 loss_ctc 11.970812 lr 0.00092049 rank 0
+2022-06-03 14:14:08,188 DEBUG TRAIN Batch 77/6800 loss 12.906385 loss_att 11.384323 loss_ctc 16.457863 lr 0.00092049 rank 1
