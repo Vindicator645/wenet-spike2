@@ -151,6 +151,10 @@ def main():
     cv_conf['spec_aug'] = False
     cv_conf['spec_sub'] = False
     cv_conf['shuffle'] = False
+    if train_conf['context_mode'] == 0:
+        cv_conf['context_mode'] = 0
+    else:
+        cv_conf['context_mode'] = 2
     non_lang_syms = read_non_lang_symbols(args.non_lang_syms)
 
     train_dataset = Dataset(args.data_type, args.train_data, symbol_table,
@@ -167,12 +171,14 @@ def main():
                                    batch_size=None,
                                    pin_memory=args.pin_memory,
                                    num_workers=args.num_workers,
-                                   prefetch_factor=args.prefetch)
+                                   prefetch_factor=args.prefetch,
+                                   persistent_workers=True)
     cv_data_loader = DataLoader(cv_dataset,
                                 batch_size=None,
                                 pin_memory=args.pin_memory,
                                 num_workers=args.num_workers,
-                                prefetch_factor=args.prefetch)
+                                prefetch_factor=args.prefetch,
+                                persistent_workers=True)
 
     if 'fbank_conf' in configs['dataset_conf']:
         input_dim = configs['dataset_conf']['fbank_conf']['num_mel_bins']
@@ -200,9 +206,9 @@ def main():
     # !!!IMPORTANT!!!
     # Try to export the model by script, if fails, we should refine
     # the code to satisfy the script export requirements
-    if args.rank == 0:
-        script_model = torch.jit.script(model)
-        script_model.save(os.path.join(args.model_dir, 'init.zip'))
+    #if args.rank == 0:
+    #    script_model = torch.jit.script(model)
+    #    script_model.save(os.path.join(args.model_dir, 'init.zip'))
     executor = Executor()
     # If specify checkpoint, load some info from checkpoint
     if args.checkpoint is not None:

@@ -20,6 +20,8 @@ import tarfile
 from subprocess import PIPE, Popen
 from urllib.parse import urlparse
 
+import numpy as np
+
 import torch
 import torchaudio
 import torchaudio.compliance.kaldi as kaldi
@@ -584,7 +586,70 @@ def batch(data, batch_type='static', batch_size=16, max_frames_in_batch=12000):
         logging.fatal('Unsupported batch type {}'.format(batch_type))
 
 
-def padding(data):
+context_list_over_all = []
+def maintain_context_list(add_list=None,list_size=60):
+    global context_list_over_all
+    if len(context_list_over_all) + len(add_list) <= list_size:
+        context_list_over_all.extend(add_list)
+    else:
+        cut_num = len(context_list_over_all) + len(add_list) - list_size
+        context_list_over_all.extend(add_list)
+        context_list_over_all = context_list_over_all[cut_num:]
+    return context_list_over_all
+def context_generate(label=None, context_len_min=1, context_len_max=2, context_mode=0, bpe_set=None, context_list_valid=None, context_list_test=None):
+    """ generate context word
+
+        Args:
+            data: Iterable[List[{key, feat, label}]]
+            len_min: min length of context word
+            len_max: max length of context word
+            mode: mode for generate(0:None,1:random select,2:generate from file)
+            file: context_list file
+
+        Returns
+            Iterable[Tuple(context,context_length)]
+    """
+    context_list = []
+    if context_mode == 2 or context_mode == 3:
+        if context_mode == 2:
+            context_list_file = context_list_valid
+        if context_mode == 3:
+            context_list_file = context_list_test 
+        f = open(context_list_file)
+        file_obj = f.readlines()
+        for item in file_obj:
+            context_list.append(torch.tensor([int(id) for id in item.split()]))
+        f.close()
+    if context_mode == 1:
+        for x in label:
+            assert isinstance(x, torch.Tensor)
+            y = x.clone().detach()
+            cur_len = len(y)
+            st_list = []
+            for index, ele in enumerate(y):
+                if int(ele) in bpe_set:
+                    st_list.append(index)
+            word_num = len(st_list)
+            st_list.append(cur_len)
+            random_len = random.randint(min(word_num, context_len_min), min(word_num, context_len_max))
+            random_index = random.randint(0, len(st_list) - random_len - 1)
+            st_index = st_list[random_index]
+            en_index = st_list[random_index + random_len]
+            cur_phrase = y[st_index: en_index]
+            context_list.append(cur_phrase)
+            ori_len = len(context_list)
+        context_list = maintain_context_list(add_list=context_list)[:random.randint(35,55)]
+        # context_list = maintain_context_list(add_list=context_list)[:ori_len]
+    if context_mode == 0:
+        return None,None
+    context_list.append(torch.tensor([0]))
+    context_lengths = torch.tensor([x.size(0) for x in context_list],dtype=torch.int32)
+    context_list_padded = pad_sequence(context_list,
+                                    batch_first=True,
+                                    padding_value=-1)
+    return context_list_padded, context_lengths   
+
+def padding(data, context_len_min=2, context_len_max=4, context_mode=0, bpe_set=None,  context_list_valid=None, context_list_test=None):
     """ Padding the data into training data
 
         Args:
@@ -605,6 +670,7 @@ def padding(data):
         sorted_labels = [
             torch.tensor(sample[i]['label'], dtype=torch.int64) for i in order
         ]
+        padded_context_list,context_lengths = context_generate(sorted_labels,context_len_min,context_len_max,context_mode,bpe_set,context_list_valid,context_list_test)
         label_lengths = torch.tensor([x.size(0) for x in sorted_labels],
                                      dtype=torch.int32)
 
@@ -614,6 +680,6 @@ def padding(data):
         padding_labels = pad_sequence(sorted_labels,
                                       batch_first=True,
                                       padding_value=-1)
-
         yield (sorted_keys, padded_feats, padding_labels, feats_lengths,
-               label_lengths)
+               label_lengths,padded_context_list,context_lengths)
+

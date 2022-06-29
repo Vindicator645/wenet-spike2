@@ -6,9 +6,9 @@
 
 # Use this to control how many gpu you use, It's 1-gpu training if you specify
 # just 1gpu, otherwise it's is multiple gpu training based on DDP in pytorch
-export CUDA_VISIBLE_DEVICES="4,5,6,7"
-stage=5 # start from 0 if you need to start from data preparation
-stop_stage=5
+export CUDA_VISIBLE_DEVICES="0,1,2"
+stage=4 # start from 0 if you need to start from data preparation
+stop_stage=4
 # data
 data_url=www.openslr.org/resources/12
 # use your own data path
@@ -17,20 +17,20 @@ datadir=./data
 wave_data=data
 # Optional train_config
 # 1. conf/train_transformer_large.yaml: Standard transformer
-train_config=conf/train_conformer.yaml
-checkpoint=/home/work_nfs4_ssd/azhang/workspace/wenet/wenet-main/examples/librispeech/s0/exp/sp_spec_aug/80.pt
-#checkpoint=
+train_config=conf/train_conformer_baseline.yaml
+checkpoint=/home/work_nfs4_ssd/azhang/workspace/wenet/wenet-main/examples/librispeech/s0/exp/sp_spec_aug_baseline/1.pt
+# checkpoint=
 cmvn=true
 do_delta=false
 
-dir=exp/sp_spec_aug
+dir=exp/sp_spec_aug_baseline
 
 # use average_checkpoint will get better result
 average_checkpoint=true
 decode_checkpoint=$dir/final.pt
 # maybe you can try to adjust it if you can not get close results as README.md
 average_num=30
-decode_modes="attention_rescoring ctc_greedy_search"
+decode_modes="attention_rescoring ctc_greedy_search ctc_prefix_beam_search attention"
 
 . tools/parse_options.sh || exit 1;
 
@@ -44,7 +44,7 @@ set -o pipefail
 
 train_set=train_960
 dev_set=dev
-recog_set="test_clean test_other"
+recog_set="test_clean test_other dev_clean dev_other"
 
 if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
   echo "stage -1: Data Download"
@@ -91,6 +91,7 @@ fi
 
 dict=$wave_data/lang_char/${train_set}_${bpemode}${nbpe}_units.txt
 bpemodel=$wave_data/lang_char/${train_set}_${bpemode}${nbpe}
+echo $bpemodel
 echo "dictionary: ${dict}"
 if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
   ### Task dependent. You have to check non-linguistic symbols used in the corpus.

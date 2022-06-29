@@ -25,6 +25,8 @@ from wenet.transformer.subsampling import LinearNoSubsampling
 from wenet.utils.common import get_activation
 from wenet.utils.mask import make_pad_mask
 from wenet.utils.mask import add_optional_chunk_mask
+from wenet.mytransformer.transformer import Transformer
+from wenet.mytransformer.attention import MultiHeadedAttentionPure
 
 
 class BLSTM(torch.nn.Module):
@@ -52,19 +54,17 @@ class BLSTM(torch.nn.Module):
                                      bidirectional=True)
 
     @torch.jit.unused
-    def forward(self, sen_batch):
-        input_len = []
-        for seq in sen_batch:
-            input_len.append(len(seq[seq != 0]))
+    def forward(self, sen_batch, sen_lengths):
         sen_batch = torch.clamp(sen_batch, 0)
         sen_batch = self.word_embedding(sen_batch)
         pack_seq = torch.nn.utils.rnn.pack_padded_sequence(
-            sen_batch, input_len, batch_first=True, enforce_sorted=False)
+            sen_batch, sen_lengths.to('cpu').type(torch.int64), batch_first=True, enforce_sorted=False)
         _, last_state = self.sen_rnn(pack_seq)
         laste_h = last_state[0]
         laste_c = last_state[1]
         state = torch.cat([laste_h[-1, :, :], laste_h[-2, :, :],
                           laste_c[-1, :, :], laste_c[-2, :, :]], dim=-1)
+        # import pdb;pdb.set_trace()
         return state
 
 
@@ -77,10 +77,11 @@ class ContextBias(torch.nn.Module):
         embedding_size: int,
         num_layers: int = 2,
         attention_heads: int = 4,
-        linear_units: int = 2048,
+        linear_units: int = 512,
         num_block: int = 4,
-        dropout_rate: float = 0.1
-
+        dropout_rate: float = 0.0,
+        bias_encoder_type: str = "linear",
+        bias_encoder: bool = True
     ):
         assert check_argument_types()
         super().__init__()
@@ -93,42 +94,119 @@ class ContextBias(torch.nn.Module):
         self.linear_units = linear_units
         self.num_blocks = num_block
         self.dropout_rate = dropout_rate
-
+        self.encoder_type = bias_encoder_type
+        self.if_bias_encoder = bias_encoder
         self.context_extractor = BLSTM(
             self.vocab_size, self.embedding_size, self.num_layers)
-        self.context_encoder = TransformerEncoder(
-            input_size=self.embedding_size * 4,
-            output_size=self.output_size,
-            attention_heads=self.attention_heads,
-            linear_units=self.linear_units,
-            num_blocks=self.num_layers,
-            dropout_rate=self.dropout_rate,
-            positional_dropout_rate=0.0,
-            attention_dropout_rate=0.0,
-            input_layer="linear",
-            pos_enc_layer_type="abs_pos",
-            normalize_before=True,
-            concat_after=False,
-            static_chunk_size=-1
+        if self.encoder_type == 'transformer':
+            self.context_encoder = TransformerEncoder(
+                input_size=self.embedding_size * 4,
+                output_size=self.embedding_size,
+                attention_heads=self.attention_heads,
+                linear_units=self.linear_units,
+                num_blocks=self.num_blocks,
+                dropout_rate=self.dropout_rate,
+                positional_dropout_rate=0.0,
+                attention_dropout_rate=0.0,
+                input_layer="linear",
+                pos_enc_layer_type="no_pos",
+                normalize_before=True,
+                concat_after=False,
+                static_chunk_size=0,
+                )
+        elif self.encoder_type == 'linear':
+            self.context_encoder = torch.nn.Sequential(torch.nn.Linear(self.embedding_size * 4,self.embedding_size),torch.nn.LayerNorm(self.embedding_size))
+        elif self.encoder_type == 'mytransformer':
+            self.context_encoder = Transformer(
+                args=None,
+                input_dim=self.embedding_size * 4,
+                output_dim=self.embedding_size,
+                attention_dim=self.embedding_size,
+                attention_heads=self.attention_heads,
+                linear_units=self.linear_units,
+                num_blocks=self.num_blocks,
+                dropout_rate=0.0,
+                positional_dropout_rate=0.0,
+                attention_dropout_rate=0.0,
+                input_layer="linear",
+                pos_enc_class="abs-enc",
+                normalize_before=True,
+                concat_after=False,
+                positionwise_layer_type="linear",
+                positionwise_conv_kernel_size=1,
+                chunk_size=-1,
+                left_chunks=-1,
             )
-        self.encoder_bias = MultiHeadedAttention(
-            n_head=self.attention_heads,
-            n_feat=self.embedding_size,
-            dropout_rate=0.0
-        )
+        if self.encoder_type == 'mytransformer':
+            self.encoder_bias = MultiHeadedAttentionPure(
+                n_head=self.attention_heads,
+                n_feat=self.embedding_size,
+                dropout_rate=0.0,
+                chunk_size=-1,
+                left_chunks=-1,
+                pos_enc_class=None,
+            )
+        else:
+            self.encoder_bias = MultiHeadedAttention(
+                n_head=self.attention_heads,
+                n_feat=self.embedding_size,
+                dropout_rate=0.0
+            )
         self.encoder_norm = torch.nn.LayerNorm(self.embedding_size)
         self.encoder_bias_norm = torch.nn.LayerNorm(self.embedding_size)
         self.encoder_ffn = torch.nn.Linear(self.embedding_size * 2, self.output_size)
     
-    def forward(self, phrase, h_enc):
-        bias_vector = self.context_extractor(phrase)
-        bias_hidden, bias_len, bias_mask = self.context_encoder(
-            bias_vector.unsqueeze(0),[bias_vector.shape[0]]
-        )
+    def forward(self, context_list, context_lengths, h_enc):
+        bias_vector = self.context_extractor(context_list,context_lengths)
+        bias_lengths = torch.tensor([bias_vector.shape[0]],dtype=torch.int32,device=bias_vector.device)
+        if self.encoder_type == 'transformer':
+            bias_hidden, bias_mask = self.context_encoder(
+                bias_vector.unsqueeze(0),bias_lengths
+            )
+        elif self.encoder_type == 'linear':
+            bias_hidden = self.context_encoder(bias_vector.unsqueeze(0))
+        elif self.encoder_type == 'mytransformer':
+            bias_hidden, ilens, bias_mask = self.context_encoder(
+                bias_vector.unsqueeze(0),bias_lengths
+            )
         bias_hidden = bias_hidden.expand(h_enc.shape[0],-1,-1)
         
-        h_enc_bias = self.encoder_bias(h_enc, bias_hidden, bias_hidden)
+        if self.encoder_type == 'mytransformer':
+            h_enc_bias = self.encoder_bias(h_enc, bias_hidden, bias_hidden)
+        else:
+            h_enc_bias,_ = self.encoder_bias(h_enc, bias_hidden, bias_hidden)
+        encoder_norm_out = self.encoder_norm(h_enc)
+        encoder_bias_norm_out = self.encoder_bias_norm(h_enc_bias)
         h_enc_concat = torch.cat(
-            [self.encoder_norm(h_enc),self.encoder_bias_norm(h_enc_bias)],axis=-1
+            [encoder_norm_out, encoder_bias_norm_out],dim=-1
         )
+
+        return h_enc + self.encoder_ffn(h_enc_concat)
+    
+    def forword_common(self, context_list, context_lengths, h_enc):
+        bias_vector = self.context_extractor(context_list,context_lengths)
+        bias_lengths = torch.tensor([bias_vector.shape[0]],dtype=torch.int32,device=bias_vector.device)
+        if self.encoder_type == 'transformer':
+            bias_hidden, bias_mask = self.context_encoder(
+                bias_vector.unsqueeze(0),bias_lengths
+            )
+        elif self.encoder_type == 'linear':
+            bias_hidden = self.context_encoder(bias_vector.unsqueeze(0))
+        elif self.encoder_type == 'mytransformer':
+            bias_hidden, ilens, bias_mask = self.context_encoder(
+                bias_vector.unsqueeze(0),bias_lengths
+            )
+        bias_hidden = bias_hidden.expand(h_enc.shape[0],-1,-1)
+        return bias_hidden
+    def forward_encoder(self, bias_hidden, h_enc):
+        if self.encoder_type == 'mytransformer':
+            h_enc_bias = self.encoder_bias(h_enc, bias_hidden, bias_hidden)
+        else:
+            h_enc_bias,_ = self.encoder_bias(h_enc, bias_hidden, bias_hidden)
+        encoder_norm_out = self.encoder_norm(h_enc)
+        encoder_bias_norm_out = self.encoder_bias_norm(h_enc_bias)
+        h_enc_concat = torch.cat(
+            [encoder_norm_out, encoder_bias_norm_out],dim=-1
+        )
+        
         return h_enc + self.encoder_ffn(h_enc_concat)

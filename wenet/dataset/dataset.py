@@ -185,5 +185,14 @@ def Dataset(data_type,
 
     batch_conf = conf.get('batch_conf', {})
     dataset = Processor(dataset, processor.batch, **batch_conf)
-    dataset = Processor(dataset, processor.padding)
+    bpe_dict_file = conf.get('bpe_dict', None)
+    bpe_set = {-1}
+    with open(bpe_dict_file) as f:
+        dic_lines = f.readlines()
+        for dic_line in dic_lines:
+            if '▁' in dic_line.strip():
+                bpe_set.add(int(dic_line.strip().split()[1]))
+    context_mode = conf.get('context_mode',1)
+    pad_conf = conf.get('pad_conf', {})
+    dataset = Processor(dataset, processor.padding, context_mode=context_mode, bpe_set=bpe_set,**pad_conf)
     return dataset

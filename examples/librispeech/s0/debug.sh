@@ -17,19 +17,19 @@ datadir=./data
 wave_data=data
 # Optional train_config
 # 1. conf/train_transformer_large.yaml: Standard transformer
-train_config=conf/train_conformer.yaml
-checkpoint=/home/work_nfs4_ssd/azhang/workspace/wenet/wenet-main/examples/librispeech/s0/exp/sp_spec_aug/80.pt
-#checkpoint=
+train_config=conf/train_conformer_baseline.yaml
+checkpoint=/home/work_nfs4_ssd/azhang/workspace/wenet/wenet-main/examples/librispeech/s0/exp/sp_spec_aug_baseline/62.pt
+# checkpoint=
 cmvn=true
 do_delta=false
 
-dir=exp/sp_spec_aug
+dir=exp/workspace
 
 # use average_checkpoint will get better result
 average_checkpoint=true
 decode_checkpoint=$dir/final.pt
 # maybe you can try to adjust it if you can not get close results as README.md
-average_num=30
+average_num=8
 decode_modes="attention_rescoring ctc_greedy_search"
 
 . tools/parse_options.sh || exit 1;
@@ -44,7 +44,7 @@ set -o pipefail
 
 train_set=train_960
 dev_set=dev
-recog_set="test_clean test_other"
+recog_set="test_other test_clean"
 
 if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
   echo "stage -1: Data Download"
@@ -91,6 +91,7 @@ fi
 
 dict=$wave_data/lang_char/${train_set}_${bpemode}${nbpe}_units.txt
 bpemodel=$wave_data/lang_char/${train_set}_${bpemode}${nbpe}
+echo $bpemodel
 echo "dictionary: ${dict}"
 if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
   ### Task dependent. You have to check non-linguistic symbols used in the corpus.

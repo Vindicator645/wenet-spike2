@@ -139,6 +139,7 @@ def main():
     test_conf['spec_sub'] = False
     test_conf['shuffle'] = False
     test_conf['sort'] = False
+    test_conf['context_mode'] = 3
     if 'fbank_conf' in test_conf:
         test_conf['fbank_conf']['dither'] = 0.0
     elif 'mfcc_conf' in test_conf:
@@ -172,15 +173,19 @@ def main():
     model.eval()
     with torch.no_grad(), open(args.result_file, 'w') as fout:
         for batch_idx, batch in enumerate(test_data_loader):
-            keys, feats, target, feats_lengths, target_lengths = batch
+            keys, feats, target, feats_lengths, target_lengths,context_list, context_lengths = batch
             feats = feats.to(device)
             target = target.to(device)
             feats_lengths = feats_lengths.to(device)
             target_lengths = target_lengths.to(device)
+            context_list = context_list.to(device)
+            context_lengths = context_lengths.to(device)
             if args.mode == 'attention':
                 hyps, _ = model.recognize(
                     feats,
                     feats_lengths,
+                    context_list,
+                    context_lengths,
                     beam_size=args.beam_size,
                     decoding_chunk_size=args.decoding_chunk_size,
                     num_decoding_left_chunks=args.num_decoding_left_chunks,
@@ -190,6 +195,8 @@ def main():
                 hyps, _ = model.ctc_greedy_search(
                     feats,
                     feats_lengths,
+                    context_list,
+                    context_lengths,
                     decoding_chunk_size=args.decoding_chunk_size,
                     num_decoding_left_chunks=args.num_decoding_left_chunks,
                     simulate_streaming=args.simulate_streaming)
@@ -201,6 +208,8 @@ def main():
                 hyp, _ = model.ctc_prefix_beam_search(
                     feats,
                     feats_lengths,
+                    context_list,
+                    context_lengths,
                     args.beam_size,
                     decoding_chunk_size=args.decoding_chunk_size,
                     num_decoding_left_chunks=args.num_decoding_left_chunks,
@@ -211,6 +220,8 @@ def main():
                 hyp, _ = model.attention_rescoring(
                     feats,
                     feats_lengths,
+                    context_list,
+                    context_lengths,
                     args.beam_size,
                     decoding_chunk_size=args.decoding_chunk_size,
                     num_decoding_left_chunks=args.num_decoding_left_chunks,

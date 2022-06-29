@@ -17,7 +17,7 @@ time2=`date +"%s"`
 echo '#' Accounting: time=$(($time2-$time1)) threads=1 >>ori_librispeech
 echo '#' Finished at `date` with status $ret >>ori_librispeech
 [ $ret -eq 137 ] && exit 100;
-touch ./q/sync/done.1122
+touch ./q/sync/done.15420
 exit $[$ret ? 1 : 0]
 ## submitted with:
 # qsub -v PATH -cwd -S /bin/bash -j y -l arch=*64* -o ./q/ori_librispeech -l gpu=1 -q g.q -pe smp 4   /home/work_nfs4_ssd/azhang/workspace/wenet/wenet-main/examples/librispeech/s0/./q/ori_librispeech.sh >>./q/ori_librispeech 2>&1
